@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL reversed;
 @property (nonatomic, assign) BOOL allowTrash;
 @property (nonatomic, assign) BOOL allowSearch;
+@property (nonatomic, assign) BOOL pullToReload;
 @property (nonatomic, assign) BOOL tapToCopy;
 @property (nonatomic, assign) BOOL pressToCopy;
 @property (nonatomic, assign) BOOL preserveEmptyLines;

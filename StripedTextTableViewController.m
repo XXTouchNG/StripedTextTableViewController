@@ -54,11 +54,13 @@
         searchController;
     });
 
-    self.refreshControl = ({
-        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-        [refreshControl addTarget:self action:@selector(reloadTextDataFromEntry:) forControlEvents:UIControlEventValueChanged];
-        refreshControl;
-    });
+    if (self.pullToReload) {
+        self.refreshControl = ({
+            UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+            [refreshControl addTarget:self action:@selector(reloadTextDataFromEntry:) forControlEvents:UIControlEventValueChanged];
+            refreshControl;
+        });
+    }
 
     if (self.allowTrash) {
         self.navigationItem.rightBarButtonItem = self.trashItem;
