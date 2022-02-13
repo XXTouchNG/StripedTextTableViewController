@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *entryPath;
 
 @property (nonatomic, assign) BOOL reversed;
+@property (nonatomic, assign) BOOL removeDuplicates;
 @property (nonatomic, assign) BOOL allowTrash;
 @property (nonatomic, assign) BOOL allowSearch;
 @property (nonatomic, assign) BOOL pullToReload;
@@ -24,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL preserveEmptyLines;
 
 @property (nonatomic, copy) NSString *rowSeparator;
+@property (nonatomic, copy) NSRegularExpression *rowPrefixRegularExpression;
 
 @end
 

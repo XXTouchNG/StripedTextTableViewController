@@ -121,13 +121,53 @@
         self.textRows = [NSArray arrayWithObjects:[NSString stringWithFormat:NSLocalizedString(@"The content of text file \"%@\" is empty.", nil), [entryPath lastPathComponent]], nil];
         [self.tableView reloadData];
     } else {
-        NSMutableArray <NSString *> *rowTexts = [[stringPart componentsSeparatedByString:self.rowSeparator ?: @"\n["] mutableCopy];
+        NSMutableArray <NSString *> *rowTexts = nil;
+
+        if (self.rowSeparator) {
+            rowTexts = [[stringPart componentsSeparatedByString:self.rowSeparator] mutableCopy];
+        } else {
+            rowTexts = [[stringPart componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy];
+        }
+
+        if (self.rowPrefixRegularExpression) {
+            NSMutableArray <NSString *> *mRowTexts = [NSMutableArray arrayWithCapacity:rowTexts.count];
+            NSMutableString *mRow = nil;
+            for (NSString *row in rowTexts) {
+                if (![self.rowPrefixRegularExpression firstMatchInString:row
+                      options:NSMatchingAnchored
+                      range:NSMakeRange(0, [row length])]
+                    ) {
+                    [mRow appendString:self.rowSeparator ?: @"\n"];
+                    [mRow appendString:row];
+                } else {
+                    if (mRow)
+                        [mRowTexts addObject:[mRow stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+                    mRow = [row mutableCopy];
+                }
+            }
+            if (mRow)
+                [mRowTexts addObject:[mRow stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+            rowTexts = mRowTexts;
+        }
+
         if (!self.preserveEmptyLines) {
             [rowTexts removeObject:@""];
         }
+
+        if (self.removeDuplicates) {
+            NSMutableArray <NSString *> *mRowTexts = [NSMutableArray arrayWithCapacity:rowTexts.count];
+            for (NSString *rowText in rowTexts) {
+                if (![mRowTexts containsObject:rowText]) {
+                    [mRowTexts addObject:rowText];
+                }
+            }
+            rowTexts = mRowTexts;
+        }
+
         if (self.reversed) {
             rowTexts = [[[rowTexts reverseObjectEnumerator] allObjects] mutableCopy];
         }
+
         self.textRows = rowTexts;
         [self.tableView reloadData];
     }
@@ -172,7 +212,16 @@
     if (searchContent) {
         NSRange searchRange = [rowText rangeOfString:searchContent options:NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch range:NSMakeRange(0, rowText.length)];
         if (searchRange.location != NSNotFound) {
-            [mRowText addAttributes:@{ NSBackgroundColorAttributeName: [UIColor colorWithRed:253.0/255.0 green:247.0/255.0 blue:148.0/255.0 alpha:1.0] } range:searchRange];
+            [mRowText addAttributes:@{
+                 NSForegroundColorAttributeName: [UIColor colorWithDynamicProvider:^UIColor *_Nonnull (UITraitCollection *_Nonnull traitCollection) {
+                                                      if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+                                                          return [UIColor systemBackgroundColor];
+                                                      } else {
+                                                          return [UIColor labelColor];
+                                                      }
+                                                  }],
+                 NSBackgroundColorAttributeName: [UIColor colorWithRed:253.0/255.0 green:247.0/255.0 blue:148.0/255.0 alpha:1.0],
+             } range:searchRange];
         }
     }
 
