@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL pressToCopy;
 @property (nonatomic, assign) BOOL preserveEmptyLines;
 
+@property (nonatomic, assign) CGFloat rowHeight;
+@property (nonatomic, assign) BOOL allowMultiline;
+@property (nonatomic, assign) NSLineBreakMode lineBreakMode;
+
 @property (nonatomic, copy) NSString *rowSeparator;
 @property (nonatomic, copy) NSRegularExpression *rowPrefixRegularExpression;
 

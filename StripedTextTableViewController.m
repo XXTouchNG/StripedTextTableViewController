@@ -28,6 +28,8 @@
 - (instancetype)initWithPath:(NSString *)path {
     if (self = [super init]) {
         _entryPath = path;
+        _rowHeight = UITableViewAutomaticDimension;
+        _lineBreakMode = NSLineBreakByWordWrapping;
     }
     return self;
 }
@@ -199,6 +201,10 @@
     return [UIView new];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return self.allowMultiline ? UITableViewAutomaticDimension : self.rowHeight;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"StripedTextCell" forIndexPath:indexPath];
 
@@ -226,8 +232,8 @@
     }
 
     [cell.textLabel setAttributedText:mRowText];
-    [cell.textLabel setNumberOfLines:0];
-    [cell.textLabel setLineBreakMode:NSLineBreakByCharWrapping];
+    [cell.textLabel setLineBreakMode:self.lineBreakMode];
+    [cell.textLabel setNumberOfLines:self.allowMultiline ? 0 : 1];
 
     if (indexPath.row % 2 == 0) {
         [cell setBackgroundColor:[UIColor systemBackgroundColor]];
