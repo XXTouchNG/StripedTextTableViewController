@@ -21,3 +21,11 @@ ctrl.rowPrefixRegularExpression = [NSRegularExpression regularExpressionWithPatt
 UINavigationController *navCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];
 [self presentViewController:navCtrl animated:YES completion:nil];
 ```
+
+## Screenshots
+
+<p float="left">
+  <img src="/IMG_0011.png" width="32%">
+  <img src="/IMG_0012.png" width="32%">
+  <img src="/IMG_0013.png" width="32%">
+</p>
