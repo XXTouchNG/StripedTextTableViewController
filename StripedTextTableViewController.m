@@ -116,10 +116,15 @@
         return;
     }
     if (self.reversed) {
-        unsigned long long seekOffset = [textHandler seekToEndOfFile];
-        [textHandler seekToFileOffset:seekOffset - 1024 * 1024];
+        unsigned long long seekOffset = 0;
+        [textHandler seekToEndReturningOffset:&seekOffset error:nil];
+        if (seekOffset > 1024 * 1024) {
+            [textHandler seekToOffset:seekOffset - 1024 * 1024 error:nil];
+        } else {
+            [textHandler seekToOffset:0 error:nil];
+        }
     }
-    NSData *dataPart = [textHandler readDataOfLength:1024 * 1024];
+    NSData *dataPart = [textHandler readDataUpToLength:1024 * 1024 error:nil];
     [textHandler closeFile];
     if (!dataPart) {
         return;
