@@ -6,6 +6,8 @@ A simple log viewer in Objective-C.
 
 ```objective-c
 StripedTextTableViewController *ctrl = [[StripedTextTableViewController alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"keybagd.log" ofType:@"0"]];
+ctrl.autoReload = YES;
+ctrl.maximumNumberOfRows = 100;
 ctrl.reversed = YES;
 ctrl.allowTrash = NO;
 ctrl.allowSearch = YES;
